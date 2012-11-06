@@ -4,8 +4,10 @@ define(["jquery"], function ($) {
 			priorityKey : "priority",
 			executeHasKey : "executeHas",
 			featuredKey : "featured",
+			inactiveKey : "inactive",
 			executeHas : "Module" //Module (default), Contructor, None, <anyMethodName>,
 		},
+		bootscope = {},
 		options = {},
 		configModule,
 		routes,
@@ -13,7 +15,8 @@ define(["jquery"], function ($) {
 		featAtt,
 		priorityAtt,
 		executeHasAtt,
-		featuredAtt;
+		featuredAtt,
+		inactiveAtt;
 	
 	/**
 	 * Helper function for iterating over an array backwards. If the func
@@ -53,8 +56,9 @@ define(["jquery"], function ($) {
 	 * as first parameter
 	 */
 	function loadModules($elementColl){
-		Array.sort.call(null, $elementColl, sortDomElements);
-		$elementColl.each(function(i, target){
+		$elementColl = Array.prototype.slice.call($elementColl, 0);
+		$elementColl.sort(sortDomElements);
+		$($elementColl).each(function(i, target){
 			var $target = $(target),
 				feature = $target.attr(featAtt),
 				executeHas = $target.attr(executeHasAtt) || options.executeHas;
@@ -90,6 +94,7 @@ define(["jquery"], function ($) {
 			priorityAtt = dataDsh + options.priorityKey;
 			executeHasAtt = dataDsh + options.executeHasKey;
 			featuredAtt = dataDsh + options.featuredKey;
+			inactiveAtt = dataDsh + options.inactiveKey;
 			
 			routes = config.hasOwnProperty("routes") ? config.routes : config;
 		}
@@ -105,7 +110,7 @@ define(["jquery"], function ($) {
 			
 					//Wait for domready before loading modules
 					$(function(){
-						loadModules($("[" + featAtt + "]"));
+						loadModules($("[" + featAtt + "]").not("[" + inactiveAtt + "]"));
 					});
 				});
 			}
@@ -114,22 +119,34 @@ define(["jquery"], function ($) {
 		}
 	});
 	
-	//
-	return {
+	//External API
+	//activeFeature(element, includeDescendants)
+	//deactivateFeature(element, inludeDescendants)
+	//loadFeature instead of detectFeature
+	//activateFeature or loadFeature(featureName) //All features of this name in the DOM not featured
+	//Should add a preload options in boot config file
+	bootscope = {
 		/** Manually set a new complete config */
 		setOptions : setup,
 		/** 
 		 * Detect manually featured elements (usefull when DOM elements are added dynamically)
+		 * TODO: rethink about this method and the ability to trigger a specific feature
 		 */
 		detectFeatures : function(context){
-			var filteredElmnts = $("[" + featAtt + "]", context).not("[" + featuredAtt + "]");
+			var filteredElmnts = $("[" + featAtt + "]", context).not("[" + featuredAtt + "]").not("[" + inactiveAtt + "]");
 			loadModules(filteredElmnts);
 		},
-		/** Return all featured DOM elements as a jQuery Collection */
-		getFeaturedElements : function(context){
+		/** Return all featured DOM elements as a jQuery Collection, optionally exclude inactive elements */
+		getFeaturedElements : function(context, excludeInactive){
+			if(excludeInactive){
+				return $("[" + featuredAtt + "]", context).not("[" + inactiveAtt + "]");
+			}
+			
 			return $("[" + featuredAtt + "]", context);
 		}
 	};
+	
+	return bootscope;
 });
 
 //Sequence

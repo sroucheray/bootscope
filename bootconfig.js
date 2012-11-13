@@ -1,15 +1,19 @@
 define({
-	require : {
-		paths: {
-			"alias": "test"
+	require : {  //RequireJS config 
+		paths : {
+			"libs" : "../libs",
+			"mediator" : "bootscope/mediator"
+		},
+		shim : {
 		}
 	},
-	options : {},
-	routes : {
-		feat1 : "test/red",
-		feat2 : "test/green",
-		feat3 : "test/blue",
-		feat4 : "alias/black",
-		feat5 : "test/test"
+	routes : { //Feature to module mapping
+		zoom : "init/zoom-map-initializer",
+		minimap : "map/minimap",
+		villagesList : "init/villages-list",
+		mapSelector : "init/map-selector"
+	},
+	globals : {//Any parameter that can be retreived in bootsope.globals
+		imgPath : "path/to/img/",
 	}
 });

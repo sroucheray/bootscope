@@ -9,6 +9,8 @@ define(["jquery"], function ($) {
 		},
 		bootscope = {},
 		options = {},
+		globals = {},
+		locals = {},
 		configModule,
 		routes,
 		dataDsh = "data-",
@@ -52,7 +54,7 @@ define(["jquery"], function ($) {
 	
 	/**
 	 * Load modules from a required feature and
-	 * executes it if a function passing the DOM element target
+	 * executes it if it is a function passing the DOM element target
 	 * as first parameter
 	 */
 	function loadModules($elementColl){
@@ -64,7 +66,6 @@ define(["jquery"], function ($) {
 				executeHas = $target.attr(executeHasAtt) || options.executeHas;
 			if(routes && feature && routes.hasOwnProperty(feature)){
 				require([routes[feature]], function(module){
-					$target.attr(featuredAtt, true);
 					//test if module should execute
 					if(executeHas === "Module"){
 						module(target);
@@ -73,6 +74,7 @@ define(["jquery"], function ($) {
 					}else if(module.hasOwnProperty(executeHas) && typeof module[executeHas] === 'function'){
 						module[executeHas](target);
 					}
+					$target.attr(featuredAtt, true);
 				});
 			}
 		});
@@ -85,11 +87,12 @@ define(["jquery"], function ($) {
 		if(config){
 			//check if in the config you don't have options that should be mixins with defaults
 			$.extend(options, defaults, config.hasOwnProperty("options") ? config.options : {});
+			$.extend(globals, config.hasOwnProperty("globals") ? config.globals : {});
+			
 			//Modify requirejs config from bootconfig
 			if(config.hasOwnProperty("require")){
 				require.config(config.require);
 			}
-			
 			featAtt = dataDsh + options.featKey;
 			priorityAtt = dataDsh + options.priorityKey;
 			executeHasAtt = dataDsh + options.executeHasKey;
@@ -100,17 +103,46 @@ define(["jquery"], function ($) {
 		}
 	}
 	
+	function preload(modules){
+		if(typeof modules === "string" && modules.length > 0){
+			require(modules.split(","), function(){});
+		}
+	}
+	
+	
 	//Get the config parsing the script tag
 	eachReverse(document.getElementsByTagName("script"), function(script){
+		var localsConf;
+		
 		configModule = script.getAttribute("data-bootscope");
 		if(configModule){
+			localsConf = script.innerHTML;
+			//Set local config
+			localsConf = $.trim(localsConf);
+			try{
+				if(localsConf.length > 0){
+					if(localsConf[0] === "{" || localsConf[0] === "["){
+						localsConf = $.parseJSON(localsConf);
+					}else if(localsConf[0] === "<"){
+						localsConf = $.parseXML(localsConf);
+					}
+				}
+				if(localsConf){
+					locals = localsConf;
+				}
+			}catch(e){}
+		
+		
 			if(!require.defined(configModule)){
 				require([configModule], function(config){
 					setup(config);
 			
+					preload(script.getAttribute("data-preload"));
 					//Wait for domready before loading modules
 					$(function(){
 						loadModules($("[" + featAtt + "]").not("[" + inactiveAtt + "]"));
+		
+						preload(script.getAttribute("data-postload"));
 					});
 				});
 			}
@@ -120,20 +152,14 @@ define(["jquery"], function ($) {
 	});
 	
 	//External API
-	//activeFeature(element, includeDescendants)
-	//deactivateFeature(element, inludeDescendants)
-	//loadFeature instead of detectFeature
-	//activateFeature or loadFeature(featureName) //All features of this name in the DOM not featured
-	//Should add a preload options in boot config file
 	bootscope = {
-		/** Manually set a new complete config */
-		setOptions : setup,
 		/** 
 		 * Detect manually featured elements (usefull when DOM elements are added dynamically)
-		 * TODO: rethink about this method and the ability to trigger a specific feature
 		 */
-		detectFeatures : function(context){
-			var filteredElmnts = $("[" + featAtt + "]", context).not("[" + featuredAtt + "]").not("[" + inactiveAtt + "]");
+		loadFeatures : function(context, feature){
+			var filteredElmnts = $("[" + featAtt + (feature ? "=" + feature : "") + "]", context).not("[" + featuredAtt + "]");
+			//.not("[" + inactiveAtt + "]");
+			filteredElmnts.attr("inactiveAtt", "");
 			loadModules(filteredElmnts);
 		},
 		/** Return all featured DOM elements as a jQuery Collection, optionally exclude inactive elements */
@@ -143,15 +169,10 @@ define(["jquery"], function ($) {
 			}
 			
 			return $("[" + featuredAtt + "]", context);
-		}
+		},
+		globals : globals,
+		locals : locals
 	};
 	
 	return bootscope;
 });
-
-//Sequence
-//1 - load this scripts
-//2 - check for config file path in data-bootscope
-//3 - load the config file
-//4 - mixin options with defautlts
-//5 - setup the 'routes' / features attached functions

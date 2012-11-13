@@ -50,7 +50,7 @@ routes : {
   ...
 }
 ...
-```
+```  
 A **route** links a feature to a module
 3. Create the module in ``menu-module.js`` in ``path/to/module``   
 ```javascript

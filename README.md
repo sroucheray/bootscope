@@ -42,13 +42,13 @@ Once you have dropped this required file in your project, it's a three steps wor
 ```  
 This indicates that this ``div`` hold a specific feature named ``menu``
 2. Add a _route_ to the bootconfig  
-```javascript  
-...  
+```javascript
+...
 routes : {
   ...
-  menu : "path/to/module/menu-module"  
+  menu : "path/to/module/menu-module"
   ...
-}  
+}
 ...
 ```
 A **route** links a feature to a module

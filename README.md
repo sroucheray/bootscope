@@ -25,7 +25,7 @@ How it works ?
 Bootscope is made of three parts  
  
 1. ``requiresjs-jquery.js`` : the module loader
-2. ``bootscope.js`` : a module which will load other module based on feature detection in the page
+2. ``bootscope.js`` : a module which will load other modules based on feature detection in the page
 3. ``bootconfig.js`` : a module which hold all the configuration and specifically the **routes** linking features to modules
 
 Once you have dropped this required file in your project, it's a three steps work :
@@ -41,7 +41,7 @@ Once you have dropped this required file in your project, it's a three steps wor
 </html>
 ```  
 This indicates that this ``div`` hold a specific feature named ``menu``
-2. Add a _route_ to the bootconfig  
+2. Add a _route_ to the bootconfig   
 ```javascript
 ...
 routes : {

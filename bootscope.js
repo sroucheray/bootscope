@@ -123,11 +123,9 @@ define(["jquery"], function ($) {
 				if(localsConf.length > 0){
 					if(localsConf[0] === "{" || localsConf[0] === "["){
 						localsConf = $.parseJSON(localsConf);
-					}else if(localsConf[0] === "<"){
-						localsConf = $.parseXML(localsConf);
 					}
 				}
-				if(localsConf){
+				if(localsConf.length > 0){
 					locals = localsConf;
 				}
 			}catch(e){}

@@ -125,7 +125,7 @@ define(["jquery"], function ($) {
 						localsConf = $.parseJSON(localsConf);
 					}
 				}
-				if(localsConf.length > 0){
+				if(localsConf){
 					locals = localsConf;
 				}
 			}catch(e){}

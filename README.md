@@ -22,15 +22,17 @@ Bootscope serves four purposes :
 
 How it works ?
 --------------
+### The parts
 Bootscope is made of three parts  
  
 1. ``requiresjs-jquery.js`` : the module loader [RequireJS](http://requirejs.org/docs/jquery.html)
 2. ``bootscope.js`` : a module which will load other modules based on feature detection in the page
 3. ``bootconfig.js`` : a module which hold all the configuration and specifically the **routes** linking features to modules
 
+### First steps
 Once you have dropped these required files in your project, it's a four steps work :
 
-1. Add the ``script`` tag in the HTML page
+#### 1. Add the ``script`` tag in the HTML page
          
 ```html
 ...
@@ -44,10 +46,12 @@ Once you have dropped these required files in your project, it's a four steps wo
 ...
 ```
 The ``script`` tag holds some specific attributes :  
-``data-main`` attribute is standard to [RequireJS](http://requirejs.org/docs/api.html#jsfiles),
-it's value is the first module loaded, in our case, it is ``bootscope.js`` (Note : never include the trailing ``.js`` when reference a module)
-``data-bootscope`` attribute value reference the ``bootconfig`` module  
-2. Add ``data-feat`` attribute to any tag in the HTML document
+  * ``data-main`` attribute is standard to [RequireJS](http://requirejs.org/docs/api.html#jsfiles),
+it's value is the first module loaded, in our case, it is ``bootscope.js``
+(Note : never include the trailing ``.js`` when reference a module)  
+  * ``data-bootscope`` attribute value reference the ``bootconfig`` module  
+        
+#### 2. Add ``data-feat`` attribute to any tag in the HTML document
     
 ```html
 <!DOCTYPE html>
@@ -59,7 +63,7 @@ it's value is the first module loaded, in our case, it is ``bootscope.js`` (Note
 </html>
 ```  
 This indicates that this ``div`` holds a specific feature named ``menu``  
-3. Add a _route_ to the ``bootconfig`` file
+#### 3. Add a _route_ to the ``bootconfig`` module
         
 ```javascript
 define({
@@ -70,7 +74,7 @@ define({
 ```  
 The ``bootconfig`` file is also a module, it returns a config object.  
 A **route** links a feature to a module  
-4. Create the module in ``menu-module.js`` in ``path/to/module``
+#### 4. Create the module in ``menu-module.js`` in ``path/to/module``
         
 ```javascript
 define(["jquery"], function(){

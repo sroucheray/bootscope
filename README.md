@@ -22,12 +22,16 @@ Bootscope serves four purposes :
 
 How it works ?
 --------------
+When the page has loaded, Bootscope look at any nodes holding a ``data-feat`` attribute. 
+If the value of this attribute is linked to a module, Bootscope loads it. The module is then defined.
+If the return value of the module's factory is a function [see here](#4-create-the-module-in-menu-modulejs-in-pathtomodule), Bootscope will execute it passing the node.
+
 ### The parts
 Bootscope is made of three parts  
  
 1. ``requiresjs-jquery.js`` : the module loader [RequireJS](http://requirejs.org/docs/jquery.html)
-2. ``bootscope.js`` : a module which will load other modules based on feature detection in the page
-3. ``bootconfig.js`` : a module which hold all the configuration and specifically the **routes** linking features to modules
+2. ``bootscope.js`` : a module, it contains Bootscope logic
+3. ``bootconfig.js`` : a module, it holds the **routes** linking features to modules
 
 ### First steps
 Once you have dropped these required files in your project, it's a four steps work :
@@ -49,7 +53,7 @@ The ``script`` tag holds some specific attributes :
   * ``data-main`` attribute is standard to [RequireJS](http://requirejs.org/docs/api.html#jsfiles),
 it's value is the first module loaded, in our case, it is ``bootscope.js``
 (Note : never include the trailing ``.js`` when reference a module)  
-  * ``data-bootscope`` attribute value reference the ``bootconfig`` module  
+  * ``data-bootscope`` attribute's value reference the ``bootconfig`` module  
         
 #### 2. Add ``data-feat`` attribute to any tag in the HTML document
     

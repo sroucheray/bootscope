@@ -19,7 +19,7 @@ define(["jquery"], function ($) {
 		executeHasAtt,
 		featuredAtt,
 		inactiveAtt;
-	
+
 	/**
 	 * Helper function for iterating over an array backwards. If the func
 	 * returns a true value, it will break out of the loop.
@@ -35,23 +35,23 @@ define(["jquery"], function ($) {
 			}
 		}
 	}
-	
+
 	/**
 	 * Sort features based on their priority
 	 */
 	function sortDomElements(a, b){
-		var aPrio = a.getAttribute(priorityAtt) || Number.MIN_VALUE,
-			bPrio = b.getAttribute(priorityAtt) || Number.MIN_VALUE;
+		var aPrio = a.getAttribute(priorityAtt) || 0,
+			bPrio = b.getAttribute(priorityAtt) || 0;
 
 		if(aPrio === bPrio){
 			return 0;
 		}else if(aPrio > bPrio){
 			return -1;
 		}
-		
+
 		return 1;
 	}
-	
+
 	/**
 	 * Load modules from a required feature and
 	 * executes it if it is a function passing the DOM element target
@@ -79,7 +79,7 @@ define(["jquery"], function ($) {
 			}
 		});
 	}
-	
+
 	/**
 	 * Setup Bootscope when config module is loaded
 	 */
@@ -88,7 +88,7 @@ define(["jquery"], function ($) {
 			//check if in the config you don't have options that should be mixins with defaults
 			$.extend(options, defaults, config.hasOwnProperty("options") ? config.options : {});
 			$.extend(globals, config.hasOwnProperty("globals") ? config.globals : {});
-			
+
 			//Modify requirejs config from bootconfig
 			if(config.hasOwnProperty("require")){
 				require.config(config.require);
@@ -98,24 +98,33 @@ define(["jquery"], function ($) {
 			executeHasAtt = dataDsh + options.executeHasKey;
 			featuredAtt = dataDsh + options.featuredKey;
 			inactiveAtt = dataDsh + options.inactiveKey;
-			
+
 			routes = config.hasOwnProperty("routes") ? config.routes : config;
 		}
 	}
-	
+
 	function preload(modules){
 		if(typeof modules === "string" && modules.length > 0){
 			require(modules.split(","), function(){});
 		}
 	}
-	
-	
+
+
 	//Get the config parsing the script tag
 	eachReverse(document.getElementsByTagName("script"), function(script){
-		var localsConf;
+		var localsConf,
+			tmpBaseUrl;
 		
 		configModule = script.getAttribute("data-bootscope");
 		if(configModule){
+			tmpBaseUrl = script.getAttribute("data-baseurl");
+
+			if(tmpBaseUrl){
+				require.config({
+					baseUrl : tmpBaseUrl
+				});
+			}
+			
 			localsConf = script.innerHTML;
 			//Set local config
 			localsConf = $.trim(localsConf);
@@ -129,29 +138,29 @@ define(["jquery"], function ($) {
 					locals = localsConf;
 				}
 			}catch(e){}
-		
-		
+
+
 			if(!require.defined(configModule)){
 				require([configModule], function(config){
 					setup(config);
-			
+
 					preload(script.getAttribute("data-preload"));
 					//Wait for domready before loading modules
 					$(function(){
 						loadModules($("[" + featAtt + "]").not("[" + inactiveAtt + "]"));
-		
+
 						preload(script.getAttribute("data-postload"));
 					});
 				});
 			}
-			
+
 			return true;
 		}
 	});
-	
+
 	//External API
 	bootscope = {
-		/** 
+		/**
 		 * Detect manually featured elements (usefull when DOM elements are added dynamically)
 		 */
 		loadFeatures : function(context, feature){
@@ -165,12 +174,12 @@ define(["jquery"], function ($) {
 			if(excludeInactive){
 				return $("[" + featuredAtt + "]", context).not("[" + inactiveAtt + "]");
 			}
-			
+
 			return $("[" + featuredAtt + "]", context);
 		},
 		globals : globals,
 		locals : locals
 	};
-	
+
 	return bootscope;
 });

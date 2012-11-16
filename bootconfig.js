@@ -8,10 +8,10 @@ define({
 		}
 	},
 	routes : { //Feature to module mapping
-		zoom : "init/zoom-map-initializer",
-		minimap : "map/minimap",
-		villagesList : "init/villages-list",
-		mapSelector : "init/map-selector"
+		red : "test/red",
+		green : "test/green",
+		blue : "test/blue",
+		black : "test/black"
 	},
 	globals : {//Any parameter that can be retreived in bootsope.globals
 		imgPath : "path/to/img/",

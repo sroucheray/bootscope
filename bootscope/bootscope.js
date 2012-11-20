@@ -11,6 +11,7 @@ define(["jquery"], function ($) {
 		options = {},
 		globals = {},
 		locals = {},
+        bootScript,
 		configModule,
 		routes,
 		dataDsh = "data-",
@@ -58,6 +59,7 @@ define(["jquery"], function ($) {
 	 * as first parameter
 	 */
 	function loadModules($elementColl){
+        var postLoadDependencies = [];
 		$elementColl = Array.prototype.slice.call($elementColl, 0);
 		$elementColl.sort(sortDomElements);
 		$($elementColl).each(function(i, target){
@@ -65,6 +67,7 @@ define(["jquery"], function ($) {
 				feature = $target.attr(featAtt),
 				executeHas = $target.attr(executeHasAtt) || options.executeHas;
 			if(routes && feature && routes.hasOwnProperty(feature)){
+                postLoadDependencies.push(routes[feature]);
 				require([routes[feature]], function(module){
 					//test if module should execute
 					if(executeHas === "Module"){
@@ -78,6 +81,10 @@ define(["jquery"], function ($) {
 				});
 			}
 		});
+        
+        require(postLoadDependencies, function(){
+            preload(bootScript.getAttribute("data-postload"));
+        });
 	}
 
 	/**
@@ -114,9 +121,10 @@ define(["jquery"], function ($) {
 	eachReverse(document.getElementsByTagName("script"), function(script){
 		var localsConf,
 			tmpBaseUrl;
-		
+
 		configModule = script.getAttribute("data-bootscope");
 		if(configModule){
+            bootScript = script;
 			tmpBaseUrl = script.getAttribute("data-baseurl");
 
 			if(tmpBaseUrl){
@@ -124,7 +132,7 @@ define(["jquery"], function ($) {
 					baseUrl : tmpBaseUrl
 				});
 			}
-			
+
 			localsConf = script.innerHTML;
 			//Set local config
 			localsConf = $.trim(localsConf);
@@ -142,14 +150,15 @@ define(["jquery"], function ($) {
 
 			if(!require.defined(configModule)){
 				require([configModule], function(config){
+                    if(locals.hasOwnProperty("require")){
+                        config.require = $.extend(true, {}, locals.require, config.require);
+                    }
 					setup(config);
 
 					preload(script.getAttribute("data-preload"));
 					//Wait for domready before loading modules
 					$(function(){
 						loadModules($("[" + featAtt + "]").not("[" + inactiveAtt + "]"));
-
-						preload(script.getAttribute("data-postload"));
 					});
 				});
 			}

@@ -2,6 +2,26 @@ Bootscope
 =============
 Declarative module loader based on web page features.
 
+**Table of Contents**
+
+- [Why Bootscope ?](#why-bootscope-)
+- [How it works ?](#how-it-works-)
+  - [The parts](#the-parts)
+  - [First steps](#first-steps)
+    - [1. Add the script tag in the HTML page](#1-add-the-script-tag-in-the-html-page)
+    - [2. Add data-feat attribute to any tag in the HTML document](#2-add-data-feat-attribute-to-any-tag-in-the-html-document)
+    - [3. Add a route to the bootconfig module](#3-add-a-route-to-the-bootconfig-module)
+    - [4. Create the module in menu-module.js in path/to/module](#4-create-the-module-in-menu-modulejs-in-pathtomodule)
+  - [How to...](#how-to)
+    - [I want to pass parameters from the backend to my scripts](#i-want-to-pass-parameters-from-the-backend-to-my-scripts)
+    - [Ok, but my parameters are dynamics and can't be dumped in a JS file](#ok-but-my-parameters-are-dynamic-and-cant-be-dumped-in-a-js-file)
+    - [Ok, but I want my parameters to be specific to a data-feat module](#ok-but-i-want-my-parameters-to-be-specific-to-a-data-feat-module)
+    - [How to load a module before another one](#how-to-load-a-module-before-another-one)
+    - [How not to load a module on the page load](#how-not-to-load-a-module-on-the-page-load)
+    - [I have module not linked to a specific part of the page, what should I do ?](#i-have-module-not-linked-to-a-specific-part-of-the-page-what-should-i-do-)
+    - [I need my modules to communicates each other, how do I pass data from one module to another ?](#i-need-my-modules-to-communicates-each-other-how-do-i-pass-data-from-one-module-to-another-)
+
+
 Why Bootscope ?
 ---------------
 Web Apps is the trending topic, this is a great paradigm change... but most of my time is still spent developing **web sites**.
@@ -118,7 +138,7 @@ define(["jquery", "bootscope"], function($, bs){
     }
 });
 ```
-#### Ok, but my parameters are dynamic and can't be dumped in a JS file
+#### Ok, but my parameters are dynamics and can't be dumped in a JS file
 The other option is to dump a JSON string within the ```script``` tag itself, thus being dropped in the HTML page, it can be pulled from your backend system :
 ```html
 ...

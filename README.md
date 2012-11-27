@@ -29,9 +29,9 @@ If the return value of the module's factory is a function [see here](#4-create-t
 ### The parts
 Bootscope is made of three parts  
  
-1. ``requiresjs-jquery.js`` : the [RequireJS](http://requirejs.org/docs/jquery.html) module loader 
+1. ``requiresjs-jquery.js`` : the [RequireJS](http://requirejs.org/docs/jquery.html) module loader
 2. ``bootscope.js`` : a module. It contains Bootscope logic
-3. ``bootconfig.js`` : a module. It holds the **routes** linking features to modules
+3. ``bootconfig.js`` : a module. It holds the **routes** linking features to modules (you set it up)
 
 ### First steps
 Once you have dropped these required files in your project, it's a four steps work :
@@ -233,7 +233,7 @@ define(["jquery", "bootscope"], function($, bs){
             var $dialog = $("#dialog");
             
             $dialog.show();
-            //The loadFeatures methos of bootscope will force the load of the map module
+            //The bootscope loadFeatures method will force the load of the map module
             bs.loadFeatures($dialog);
 
             return false;
@@ -250,3 +250,54 @@ define(["jquery"], function($){
     }
 });
 ```
+
+####I have module not linked to a specific part of the page, what should I do ?
+If one or several modules are not linked to an element in the page, you can use the script tag to load it like this :
+```html
+...
+<head>
+    <script src="requiresjs-jquery.js"
+            data-main="path/to/bootscope"
+            data-bootscope="bootconfig"
+            data-preload="module1, sub/module2"
+            data-postload="sub2/module3, sub2/module4"
+            type="text/javascript">
+    </script>
+</head>
+...
+```
+```module1``` and  ```module2``` will be loaded as soon as possible. Bootscope will not wait for the page to be ready.  ```module3``` and  ```module4``` will be loaded after all the featured module in the page are loaded. This is useful for modules that need the page to be fully functionnal before being executed.
+####I need my modules to communicates each other, how do I pass data from one module to another ?
+Bootscope provides a specific module named ```mediator``` which act as a communication layer using the Pub/Sub pattern.
+If ```moduleA``` wants to send to ```moduleB``` a message saying the data are updated passing the specific data.
+```javascript
+//moduleB.js
+define(["jquery", "mediator"], function($, mediator){
+    return function(node){
+        //moduleB defines a function which handles the receiving data
+        function dataHandler(data){
+          //Do whatever you want with those data
+          console.log(data);
+        }
+
+
+        //moduleB subscribe to 'data:updated' channel
+        mediator.on("data:updated", dataHandler);
+    }
+});
+
+
+//moduleB.js
+define(["jquery", "mediator"], function($, mediator){
+    return function(node){
+      var object = {
+        foo : "bar"
+      };
+
+      //moduleA publish its object to the channel "data:updated"
+      //the object will be received by all modules subsribing to this channel
+      mediator.trigger("data:updated", object);
+    }
+});
+```
+The ````mediator```` code is borrowed to [BackboneJS](http://backbonejs.org/#Events), click to see more information on channels.

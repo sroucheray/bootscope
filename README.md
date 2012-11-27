@@ -81,7 +81,7 @@ A **route** links a feature to a module
 #### 4. Create the module in ``menu-module.js`` in ``path/to/module``
         
 ```javascript
-define(["jquery"], function(){
+define(["jquery"], function($){
     //Here is the module logic
     //The code here is executed once in page life, when the module is loaded 
     return function(node){
@@ -90,6 +90,84 @@ define(["jquery"], function(){
       //the data-feat attribute linked to this module
  
       //node is the div holding the data-feat attribute
+    }
+});
+```
+
+### How to...
+#### I want to pass parameters from the backend to my scripts
+The easiest way is to add a ``globals`` property to the ``bootconfig`` file :
+```javascript
+define({
+    routes: { //Feature to module mapping
+        menu : "path/to/module/menu-module"
+    },
+    globals: { //Any parameter that can be retreived in bootsope.global
+        imgPath: "path/to/images/",
+        dataJSONPath: "javascript/data/data.json"
+    }
+});
+```
+This ```bootscope``` script being a module itself, your modules can depend on it :
+```javascript
+define(["jquery", "bootscope"], function($, bs){
+    //Data is retrieved from the globals property of the bootscope module
+    var pathToImg = bs.globals.imgPath,
+        json = bs.globals.dataJSONPath;
+    return function(node){
+    }
+});
+```
+#### Ok, but my parameters are dynamic and can't be dumped in a JS file
+The other option is to dump a JSON string within the ```script``` tag itself, thus being dropped in the HTML page, it can be pulled from your backend system :
+```html
+...
+<head>
+    <script
+        data-main="path/to/bootscope"
+        data-bootscope="bootconfig"
+        type="text/javascript">
+    {
+        "imgPath" : "path/to/img/",
+        "data" : "path/to/data/"
+    }
+    </script>
+</head>
+...
+```
+The magic is that you retrieved this JSON string parsed as an plain object in the ```locals``` property of the ```bootscope``` module.
+```javascript
+define(["jquery", "bootscope"], function($, bs){
+    //Data is retrieved from the globals property of the bootscope module
+    var pathToImg = bs.locals.imgPath,
+        data= bs.locals.data;
+    return function(node){
+    }
+});
+```
+#### Ok, but I want my parameters to be specific to a ```data-feat``` module
+In this case, just drop other ```data-*``` attributes on your node :
+```html
+<!DOCTYPE html>
+<html>
+  <head>...</head>
+  <body>
+    <div data-feat="menu" data-color="red"></div>
+    <div data-feat="menu" data-color="blue"></div>
+    <div data-feat="menu"></div>
+  </body>
+</html>
+```  
+You can then retrieve these parameters in your module (note : this time no dependency to ```bootscope``` required) :
+```javascript
+define(["jquery"], function($){
+    //Remember that the function below is executed for each menu
+    return function(menu){
+        var $menu = $(menu),
+            data = $menu.data();
+        if(data.hasOwnProperty("color")){
+            $menu.css("background-color", data.color);
+        }
     }
 });
 ```

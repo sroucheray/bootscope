@@ -42,9 +42,9 @@ Once you have dropped these required files in your project, it's a four steps wo
 ...
 <head>
     <script src="requiresjs-jquery.js"
-        data-main="path/to/bootscope"
-        data-bootscope="bootconfig"
-        type="text/javascript">
+            data-main="path/to/bootscope"
+            data-bootscope="bootconfig"
+            type="text/javascript">
     </script>
 </head>
 ...
@@ -84,12 +84,12 @@ define({
 define(["jquery"], function($){
     //Here is the module logic
     //The code here is executed once in page life, when the module is loaded 
-    return function(node){
+    return function(element){
       //Here is the menu logic
-      //This code is executed for each node found on the page with 
+      //This code is executed for each element found on the page with 
       //the data-feat attribute linked to this module
  
-      //node is the div holding the data-feat attribute
+      //element is the div holding the data-feat attribute
     }
 });
 ```
@@ -158,7 +158,7 @@ In this case, just drop other ```data-*``` attributes on your node :
   </body>
 </html>
 ```  
-You can then retrieve these parameters in your module (note : this time no dependency to ```bootscope``` required) :
+You can then retrieve these parameters in your module (note : this time no dependency to ```bootscope``` is required) :
 ```javascript
 define(["jquery"], function($){
     //Remember that the function below is executed for each menu element
@@ -168,6 +168,85 @@ define(["jquery"], function($){
         if(data.hasOwnProperty("color")){
             $menu.css("background-color", data.color);
         }
+    }
+});
+```
+#### How to load a module before another one
+By default Bootscope loads module in the order of the HTML page. To gice a higher priority to a specific feature that is not a the top of the page simply add a ```data-priority``` atribute to the tag :
+```html
+<!DOCTYPE html>
+<html>
+  <head>...</head>
+  <body>
+    <div data-feat="menu"></div>
+    <div data-feat="search" data-priority="1"></div>
+    <div data-feat="carousel"></div>
+  </body>
+</html>
+```  
+In this case the ```search``` module will be loaded before the menu and the carousel. 
+
+Default priority for a module is ```0``` so you can pass a negative integer to lower thr priority of a module :
+```html
+<!DOCTYPE html>
+<html>
+  <head>...</head>
+  <body>
+    <div data-feat="carousel" data-priority="-1"></div>
+    <div data-feat="menu"></div>
+    <div data-feat="search"></div>
+  </body>
+</html>
+```  
+While, in this case, the ```carousel``` is the first to appear in the page, it will be loaded after all the other one.
+#### How not to load a module on the page load
+It is possible to delay the load of a specific feature module adding a ```data-inactive``` attribute to the element.
+
+Consider this case :
+```html
+<!DOCTYPE html>
+<html>
+  <head>...</head>
+  <body>
+    <a href="#" data-feat="link"></div>
+    <div id="dialog" data-feat="map" data-inactive="true" style="display:none"></div>
+  </body>
+</html>
+```  
+
+The bootconfig will look like this :
+```javascript
+define({
+    routes: {
+        link : "path/to/module/link",
+        map : "path/to/module/map"
+    }
+});
+```
+The link module when clicked should show a dialog like box with a map in it.
+While the ```map``` module is not executed automatically, the ```link``` module will be executed on page load :
+```javascript
+//link.js
+define(["jquery", "bootscope"], function($, bs){
+    return function(link){
+        $(link).click(function(){
+            var $dialog = $("#dialog");
+            
+            $dialog.show();
+            //The loadFeatures methos of bootscope will force the load of the map module
+            bs.loadFeatures($dialog);
+
+            return false;
+        });
+    }
+});
+
+
+//map.js
+define(["jquery"], function($){
+    //Execution delayed after click on the link
+    return function(map){
+      //Logic to setup the map
     }
 });
 ```

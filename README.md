@@ -41,7 +41,7 @@ Once you have dropped these required files in your project, it's a four steps wo
 ```html
 ...
 <head>
-    <script
+    <script src="requiresjs-jquery.js"
         data-main="path/to/bootscope"
         data-bootscope="bootconfig"
         type="text/javascript">
@@ -68,6 +68,8 @@ it's value is the first module loaded, in our case, it is ``bootscope.js``
 ```  
 This indicates that this ``div`` holds a specific feature named ``menu``  
 #### 3. Add a _route_ to the ``bootconfig`` module
+The ``bootconfig`` file is also a module, it returns a config object. This config object holds the routes. 
+A **route** links a feature to a module    
         
 ```javascript
 define({
@@ -76,8 +78,6 @@ define({
     }
 });
 ```  
-The ``bootconfig`` file is also a module, it returns a config object.  
-A **route** links a feature to a module  
 #### 4. Create the module in ``menu-module.js`` in ``path/to/module``
         
 ```javascript
@@ -123,10 +123,10 @@ The other option is to dump a JSON string within the ```script``` tag itself, th
 ```html
 ...
 <head>
-    <script
-        data-main="path/to/bootscope"
-        data-bootscope="bootconfig"
-        type="text/javascript">
+    <script src="require-jquery.js"
+            data-main="path/to/bootscope"
+            data-bootscope="bootconfig"
+            type="text/javascript">
     '{
         "imgPath" : "path/to/img/",
         "data" : "path/to/data/"

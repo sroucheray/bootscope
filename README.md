@@ -1,6 +1,6 @@
 Bootscope
 =============
-Declarative module loader based on web page features.
+Bootscope is a RequireJS boot module that load other modules using a declarative syntax within HTML pages. 
 
 **Table of Contents**
 

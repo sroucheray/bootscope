@@ -20,6 +20,9 @@ Declarative module loader based on web page features.
       - [How not to load a module on the page load](#how-not-to-load-a-module-on-the-page-load)
       - [I have module not linked to a specific part of the page, what should I do ?](#i-have-module-not-linked-to-a-specific-part-of-the-page-what-should-i-do-)
       - [I need my modules to communicates each other, how do I pass data from one module to another ?](#i-need-my-modules-to-communicates-each-other-how-do-i-pass-data-from-one-module-to-another-)
+      - [Where do I setup RequireJS for paths and other things](#where-do-i-setup-requirejs-for-paths-and-other-things)
+          - [Paths to modules can be shortcuted using the require.paths property of the bootconfig module :](#paths-to-modules-can-be-shortcuted-using-the-requirepaths-property-of-the-bootconfig-module-)
+          - [You can also define dependency name for script that are not module using RequireJS shim feature :](#you-can-also-define-dependency-name-for-script-that-are-not-module-using-requirejs-shim-feature-)
 
 
 Why Bootscope ?

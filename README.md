@@ -320,4 +320,70 @@ define(["jquery", "mediator"], function($, mediator){
     }
 });
 ```
-The ````mediator```` code is borrowed to [BackboneJS](http://backbonejs.org/#Events), click to see more information on channels.
+The ````mediator```` code is borrowed from [BackboneJS](http://backbonejs.org/#Events), click to see more information on channels.
+
+####Where do I setup RequireJS for paths and other things
+The module path can be a bit tricky. Let's make it clear :
+ 1. Modules path is what you write when you add a dependency to a module 
+ 2. Modules path are relatives to the **base url**
+ 3. If nothing is specified, the **base url** is the ```bootscope``` module url
+ 4. It can be changed by adding a ```data-baseurl``` to the ```script``` tag
+    * In this case the the first module to be loaded using this redefined base url is the ```bootconfig``` module
+    * The ```data-baseurl``` attribute is useful if the ```bootconfig``` module is **not** in the same directory as the ```bootscope```
+ 5. In the ```bootconfig``` module you can redefine again the base url using the ```require``` property
+    * This is useful if all the modules base url is not the ```bootconfig``` directory
+
+#####Paths to modules can be shortcuted using the ```require.paths``` property of the ```bootconfig``` module :
+```javascript
+define({
+  require: { //RequireJS config
+        paths: {
+            "mediator": "bootscope/mediator",
+            "text": "plugins/text",
+            "i18n": "plugins/i18n",
+            "async": "plugins/async"
+        }
+    },
+    routes: {
+        link : "path/to/module/link",
+        map : "path/to/module/map"
+    }
+});
+```
+#####You can also define dependency name for script that are not module using RequireJS shim feature :
+```javascript
+//bootscope.js
+define({
+  require: { //RequireJS config
+        paths: {
+            "mediator": "bootscope/mediator",
+            "text": "plugins/text",
+            "i18n": "plugins/i18n",
+            "async": "plugins/async"
+        },
+        shim: {
+            "underscore": {
+                exports: "_"
+            },
+            "handlebars": {
+                exports: "Handlebars"
+            },,
+            "jqueryui": {
+                deps: ["jquery"],
+                exports: "jqueryui"
+            }
+        }
+    },
+    routes: {
+        link : "path/to/module/link",
+        map : "path/to/module/map"
+    }
+});
+
+//anymodule.js
+define(["jquery", "underscore"], function($, _){
+    //This is executed after Underscore is available even if Underscore is not a module
+    return function(node){
+    }
+});
+```

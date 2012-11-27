@@ -1,15 +1,14 @@
 Bootscope
 =============
-
 Declarative module loader based on web page features.
 
 Why Bootscope ?
 ---------------
-Web development trending topics are web apps, but must of my time is still spent developing 'web sites'.
+Web Apps is the trending topic, this is a great paradigm change... but most of my time is still spent developing **web sites**.
 
-Web sites are very different from web apps.
+*Web sites* are very different from *web apps*.
 
-Web sites are not uniform and features scattered.
+*Web sites* are not uniform and features scattered.
 
 Some pages have forms, some have menus, some have widgets, some have no specific features.
 
@@ -22,16 +21,17 @@ Bootscope serves four purposes :
 
 How it works ?
 --------------
-When the page has loaded, Bootscope look at any nodes holding a ``data-feat`` attribute. 
+When the page has loaded, Bootscope look at any element in the page holding a ``data-feat`` attribute. 
 If the value of this attribute is linked to a module, Bootscope loads it. The module is then defined.
-If the return value of the module's factory is a function [see here](#4-create-the-module-in-menu-modulejs-in-pathtomodule), Bootscope will execute it passing the node.
+
+If the return value of the module's factory is a function [see here](#4-create-the-module-in-menu-modulejs-in-pathtomodule), Bootscope will execute it passing the element.
 
 ### The parts
 Bootscope is made of three parts  
  
-1. ``requiresjs-jquery.js`` : the module loader [RequireJS](http://requirejs.org/docs/jquery.html)
-2. ``bootscope.js`` : a module, it contains Bootscope logic
-3. ``bootconfig.js`` : a module, it holds the **routes** linking features to modules
+1. ``requiresjs-jquery.js`` : the [RequireJS](http://requirejs.org/docs/jquery.html) module loader 
+2. ``bootscope.js`` : a module. It contains Bootscope logic
+3. ``bootconfig.js`` : a module. It holds the **routes** linking features to modules
 
 ### First steps
 Once you have dropped these required files in your project, it's a four steps work :
@@ -127,10 +127,10 @@ The other option is to dump a JSON string within the ```script``` tag itself, th
         data-main="path/to/bootscope"
         data-bootscope="bootconfig"
         type="text/javascript">
-    {
+    '{
         "imgPath" : "path/to/img/",
         "data" : "path/to/data/"
-    }
+    }'
     </script>
 </head>
 ...
@@ -161,7 +161,7 @@ In this case, just drop other ```data-*``` attributes on your node :
 You can then retrieve these parameters in your module (note : this time no dependency to ```bootscope``` required) :
 ```javascript
 define(["jquery"], function($){
-    //Remember that the function below is executed for each menu
+    //Remember that the function below is executed for each menu element
     return function(menu){
         var $menu = $(menu),
             data = $menu.data();

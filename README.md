@@ -81,7 +81,7 @@ Once you have dropped these required files in your project, it's a four steps wo
 The ``script`` tag holds some specific attributes :  
   * ``data-main`` attribute is standard to [RequireJS](http://requirejs.org/docs/api.html#jsfiles),
 it's value is the first module loaded, in our case, it is ``bootscope.js``
-(Note : never include the trailing ``.js`` when reference a module)  
+(Note : never include the trailing ``.js`` when referencing a module)  
   * ``data-bootscope`` attribute's value reference the ``bootconfig`` module  
         
 #### 2. Add ``data-feat`` attribute to any tag in the HTML document
@@ -201,7 +201,7 @@ define(["jquery"], function($){
 });
 ```
 #### How to load a module before another one
-By default Bootscope loads module in the order of the HTML page. To gice a higher priority to a specific feature that is not a the top of the page simply add a ```data-priority``` atribute to the tag :
+By default Bootscope loads module in the order of the HTML page. To give a higher priority to a specific feature that is not a the top of the page simply add a ```data-priority``` atribute to the tag :
 ```html
 <!DOCTYPE html>
 <html>

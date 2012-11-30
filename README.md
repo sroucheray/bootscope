@@ -1,6 +1,10 @@
 Bootscope
 =============
-Bootscope is a RequireJS boot module that load other modules using a declarative syntax within HTML pages. 
+Bootscope is a RequireJS boot module that load other modules using a declarative syntax within HTML pages.
+
+It suits to websites, not webapps.
+
+It anwsers one question : How do you make the decision to load or not to load a specific module in a specific page of your site ?
 
 **Table of Contents**
 
@@ -27,13 +31,15 @@ Bootscope is a RequireJS boot module that load other modules using a declarative
 
 Why Bootscope ?
 ---------------
-Web Apps is the trending topic, this is a great paradigm change... but most of my time is still spent developing **web sites**.
+Webapps is the trending topic, this is a great paradigm change... but most of my time is still spent developing **websites**.
 
-*Web sites* are very different from *web apps*.
+*Websites* are very different from *webapps*.
 
-*Web sites* are not uniform and features scattered.
+*Websites* are not uniform and features scattered.
 
 Some pages have forms, some have menus, some have widgets, some have no specific features.
+
+You cannot rely on URLs of your *Website*'s pages to identify its unique features because of the SEO rewriting.
 
 Bootscope serves four purposes :
 

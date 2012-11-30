@@ -31,7 +31,7 @@ It anwsers one question : How do you make the decision to load or not to load a 
 
 Why Bootscope ?
 ---------------
-Webapps is the trending topic, this is a great paradigm change... but most of my time is still spent developing **websites**.
+*Webapps* is the trending topic, this is a great paradigm change... but **websites** still exist, aren't they ?
 
 *Websites* are very different from *webapps*.
 

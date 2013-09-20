@@ -175,7 +175,7 @@ define(["jquery"], function ($) {
 		loadFeatures : function(context, feature){
 			var filteredElmnts = $("[" + featAtt + (feature ? "=" + feature : "") + "]", context).not("[" + featuredAtt + "]");
 			//.not("[" + inactiveAtt + "]");
-			filteredElmnts.attr("inactiveAtt", "");
+			filteredElmnts.attr(inactiveAtt, "");
 			loadModules(filteredElmnts);
 		},
 		/** Return all featured DOM elements as a jQuery Collection, optionally exclude inactive elements */

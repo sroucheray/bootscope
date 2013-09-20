@@ -81,7 +81,7 @@ define(["jquery"], function ($) {
 				});
 			}
 		});
-        
+
         require(postLoadDependencies, function(){
             preload(bootScript.getAttribute("data-postload"));
         });
@@ -120,6 +120,7 @@ define(["jquery"], function ($) {
 	//Get the config parsing the script tag
 	eachReverse(document.getElementsByTagName("script"), function(script){
 		var localsConf,
+            localsConfFormat,
 			tmpBaseUrl;
 
 		configModule = script.getAttribute("data-bootscope");
@@ -138,7 +139,11 @@ define(["jquery"], function ($) {
 			localsConf = $.trim(localsConf);
 			try{
 				if(localsConf.length > 0){
-					if(localsConf[0] === "{" || localsConf[0] === "["){
+
+                    //ie FIX
+                    localsConfFormat = localsConf.split("");
+
+					if(localsConfFormat[0] === "{" || localsConfFormat[0] === "["){
 						localsConf = $.parseJSON(localsConf);
 					}
 				}

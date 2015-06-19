@@ -1,0 +1,47 @@
+{
+  "name": "bootscope",
+  "version": "0.3.0",
+  "description": "Load ES6 module in web page as soon as it is required",
+  "main": "bootscope/bootscope.js",
+  "directories": {
+    "test": "test",
+    "packages": "jspm_packages"
+  },
+  "dependencies": {
+    "babel-core": "^5.2.16",
+    "grunt-contrib-copy": "^0.8.0",
+    "es6-module-loader": "^0.16.6"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sroucheray/bootscope.git"
+  },
+  "keywords": [
+    "es6",
+    "boot",
+    "loader"
+  ],
+  "author": "@sroucheray",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/sroucheray/bootscope/issues"
+  },
+  "homepage": "https://github.com/sroucheray/bootscope#readme",
+  "jspm": {
+    "files": ["bootscope/bootscope.js"]
+    "directories": {
+      "test": "test"
+    },
+    "dependencies": {
+      "event-class": "npm:event-class@^0.1.1"
+    },
+    "devDependencies": {
+      "traceur": "github:jmcriffey/bower-traceur@0.0.89",
+      "traceur-runtime": "github:jmcriffey/bower-traceur-runtime@0.0.89"
+    }
+  }
+}

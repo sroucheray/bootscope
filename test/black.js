@@ -1,10 +1,19 @@
-define(function(){
-	var color = "#000";
-	
-	console.timeStamp("Black loaded");
-	return function(target){
-	
-		console.timeStamp("Black executed");
-		$(target).css("background-color", color);
-	}
-});
+import EventClass from "event-class";
+import bootscope from "bootscope/bootscope";
+
+class Black extends EventClass {
+    constructor(){
+        super();
+        this.color = "#000";
+        this.on("ready", this.ready)
+    }
+
+    ready(element){
+        console.timeStamp("Black loaded");
+        element.style.backgroundColor = this.color;
+        element.querySelector("output").innerHTML = (Date.now() - bootscope.readyTime) + "ms";
+    }
+}
+
+export default new Black();
+

@@ -3,17 +3,25 @@
     <head>
         <meta charset="utf-8">
         <title></title>
-        <script 
-			src="../libs/requirejs/require-jquery.js" 
-			data-main="../bootscope/bootscope" 
-			data-bootscope="bootconfig"
-			data-baseurl=".."></script>
+        <style>
+        body {
+            color: #cacaca;
+        }
+        </style>
     </head>
     <body>
-		<div data-feat="red">&nbsp;</div>
-		<div data-feat="green">&nbsp;</div>
-		<div data-feat="blue">&nbsp;</div>
-		<div data-feat="black" data-priority="1">&nbsp;</div>
-		<div data-feat="red">&nbsp;</div>
+        <h2>Load order</h2>
+		<div data-module="test/red">2nd <output class="time"></output></div>
+		<div data-module="test/green">3rd <output class="time"></output></div>
+		<div data-module="test/blue">4th <output class="time"></output></div>
+		<div data-module="test/black" data-priority="1">1st top priority <output class="time"></output></div>
+        <div data-module="test/red" data-priority="-1">6th low priority <output class="time"></output></div>
+        <div data-module="test/disabled" data-disabled="true">8th module disabled &amp; loaded later <output class="time"></output></div>
+        <div data-module="test/test">5th <output class="time"></output></div>
+    <script src="../jspm_packages/system.src.js"></script>
+    <script src="../config.js"></script>
+    <script>
+    System.import("../bootscope/bootscope.js");
+    </script>
     </body>
 </html>

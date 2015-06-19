@@ -1,18 +1,18 @@
 import EventClass from "event-class";
 import bootscope from "bootscope/bootscope";
 
-class Red extends EventClass {
+class Disabled extends EventClass {
     constructor(){
         super();
-        this.color = "#f00";
+        this.color = "#0ff";
         this.on("ready", this.ready)
     }
 
     ready(element){
-        console.timeStamp("Red loaded");
+        console.timeStamp("Disabled loaded");
         element.style.backgroundColor = this.color;
         element.querySelector("output").innerHTML = (Date.now() - bootscope.readyTime) + "ms";
     }
 }
 
-export default new Red();
+export default new Disabled();

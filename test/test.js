@@ -1,15 +1,31 @@
-define(["bootscope"], function(bootscope){
-	var color = "#AAA";
-	
-	console.timeStamp("Test loaded");
-	console.log(bootscope);
-	
-	return function(target){
-	
-		console.timeStamp("Test executed");
-		$(target).css("background-color", color);
-		
-		$("<div />").appendTo("body").attr("data-feat", "feat3").html("&nbsp;");
-		bootscope.detectFeatures();
-	}
-});
+import EventClass from "event-class";
+import bootscope from "bootscope/bootscope";
+
+class Test extends EventClass {
+    constructor(){
+        super();
+        this.color = "#aaa";
+        this.on("ready", this.ready)
+    }
+
+    ready(element){
+        console.timeStamp("Test loaded");
+
+        element.style.backgroundColor = this.color;
+        element.querySelector("output").innerHTML = (Date.now() - bootscope.readyTime) + "ms";
+
+        let div = document.createElement("div");
+        div.setAttribute("data-module", "test/red");
+        div.innerHTML = "7th created dynamically "
+        div.appendChild(document.createElement("output"));
+        document.body.appendChild(div);
+		bootscope.load(div);
+        div.querySelector("output").innerHTML = (Date.now() - bootscope.readyTime) + "ms";
+
+        setTimeout(()=>{
+        	bootscope.enableAndLoad(document.body);
+        }, 1000);
+    }
+}
+
+export default new Test();
